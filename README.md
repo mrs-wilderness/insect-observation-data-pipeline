@@ -16,21 +16,21 @@ This project was originally developed as a university SQL data-processing assign
 
 ## Limitations and Notes
 
-- The records from DOPI dataset are allowed to be full duplicates, and the check on the surrogate record key was not implemented as the task did not allow using surrogate keys from csv files. Running the part of the ETL that loads data from `insect_observations.csv` twice will **and should** result in duplicating the full observations dataset in the database.
+- **NB! The records from DOPI dataset are allowed to be full duplicates, and the check on the surrogate record key was not implemented as the task did not allow using surrogate keys from csv files.** Running the part of the ETL that loads data from `insect_observations.csv` twice will and should result in duplicating the full observations dataset in the database.
 
-- The DOPI dataset contains inconsistent fields, so ETL1 includes manual corrections for specific known issues.
+- The DOPI dataset contains inconsistent fields, so ETL1 includes **manual corrections** for specific known issues.
 
-- The Power BI report (`04_bi/insect_observation_report.pbix`) was created by importing data from the OLAP database; they are not connected live. The report contains an embedded snapshot of the data, so it can be opened directly without any database connection.  
-  The choice to have two separate slicers for month and year, rather than implementing a date hierarchy, was made because the domain is centered around seasonal trends, so it is important to be able to filter by both independently.
+- The Power BI report (`04_bi/insect_observation_report.pbix`) was created by importing data from the OLAP database; they are not connected live. **The report contains an embedded snapshot of the data**, so it can be opened directly without any database connection.
+  The choice to have **two separate slicers for month and year**, rather than implementing a date hierarchy, was made because the domain is centered around seasonal trends, so it is important to be able to filter by both independently.
 
-- Mixing real historical data with synthetic app metadata required a few pragmatic assumptions in affiliation and subscription logic. As the dates of the user subscriptions and affiliation do not cover the whole date range of the observations dataset, we allow users to enter observations that happened prior to joining.  
+- Mixing real historical data with synthetic app metadata required a few pragmatic assumptions in **affiliation and subscription logic**. As the dates of the user subscriptions and affiliation do not cover the whole date range of the observations dataset, we allow users to enter observations that happened prior to joining.  
   The logic of mapping affiliation to an observation is as follows: dates earlier than first affiliation date map to the earliest affiliation. Mapping subscription type to observations follows the same logic.
 
-- Both `user_institution` and `user_subscription` in the OLTP DB are designed to not overwrite values upon change and are implemented as SCD2. In our fictional app, we want to tie an observation to an institution or subscription type.
+- Both `user_institution` and `user_subscription` in the OLTP DB are designed to not overwrite values upon change and are **implemented as SCD2**. In our fictional app, we want to tie an observation to an institution or subscription type.
 
-- The choice to have both `pollinator_id` and `caste_id` in observations, and create a `pollinator_caste` table was conscious. One caste can be observed in many species, so it is a separate property of an observation. Yet the caste is also a property of the species, and the information about which pollinator–caste combinations are present in our database can be considered an entity of its own.
+- The choice to have both `pollinator_id` and `caste_id` in observations, and create a **`pollinator_caste`** table was conscious. One caste can be observed in many species, so it is a separate property of an observation. Yet the caste is also a property of the species, and the information about which pollinator–caste combinations are present in our database can be considered an entity of its own.
 
-- Locations are a separate entity as there are only 500+ locations for 18K+ rows.
+- **Locations** are a separate entity as there are only 500+ locations for 18K+ rows.
 
 ## Data
 
